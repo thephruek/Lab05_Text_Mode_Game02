@@ -18,9 +18,9 @@ void draw_ship(int x, int y)
 }
 void draw_ammo(int x, int y)
 {
-	gotoxy(x += 4, --y);
+	gotoxy(x , --y);
 	setcolor(14 , 0);
-	printf("A");
+	printf("   A   ");
 }
 void erase_ship(int x, int y)
 {
@@ -29,8 +29,8 @@ void erase_ship(int x, int y)
 }
 void erase_ammo(int x, int y)
 {
-	gotoxy(x += 4, --y);
-	printf(" ");
+	gotoxy(x , --y);
+	printf("       ");
 }
 void setcursor(bool visible)
 {
@@ -89,7 +89,7 @@ int main()
 		if (y2 == 1) {
 			erase_ammo(x2, y2);
 			j = 0; 
-			y2 = y2;
+			y2 = y1;
 		}
 	} while (ch != 'x');
 	return 0;
