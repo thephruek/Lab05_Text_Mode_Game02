@@ -84,11 +84,11 @@ int main()
 		}
 		if (j == 1 && y2 > 1) {
 			erase_ammo(x2, y2);
-			draw_ammo(x2, --y2);
+			draw_ammo(x2, --y2);  
 		}
 		if (y2 == 1) {
 			erase_ammo(x2, y2);
-			j = 0; 
+			j = 0;
 			y2 = y1;
 		}
 	} while (ch != 'x');
