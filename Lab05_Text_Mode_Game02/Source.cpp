@@ -13,24 +13,27 @@ void setcolor(int fg, int bg)
 }
 void draw_ship(int x, int y)
 {
+	setcolor(2, 4);
 	gotoxy(x, y); 
-	printf("<--0-->");
+	printf("<-0->");
 }
-void draw_ammo(int x, int y)
+void draw_bullet(int xb, int yb)
 {
-	gotoxy(x , --y);
 	setcolor(14 , 0);
-	printf("   A   ");
+	gotoxy(xb , yb);
+	printf("|");
 }
 void erase_ship(int x, int y)
 {
 	gotoxy(x, y);
-	printf("       ");
+	setcolor(2, 0);
+	printf("     ");
 }
-void erase_ammo(int x, int y)
+void erase_bullet(int xb, int yb)
 {
-	gotoxy(x , --y);
-	printf("       ");
+	gotoxy(xb , yb);
+	setcolor(2, 0);
+	printf(" ");
 }
 void setcursor(bool visible)
 {
@@ -43,54 +46,47 @@ void setcursor(bool visible)
 int main()
 {
 	setcursor(0);
+	int gun[5] = { 0 }, ax[5] = { 0 }, ay[5] = { 0 };
+	int bullet = 0;
+	char dir = 's';
 	char ch = '.';
-	int x1 = 38, y1 = 20, x2 = 38, y2 = 20, i = 0, j = 0;
-	setcolor(2, 4);
-	draw_ship(x1, y1);
-	setcolor(2, 0);
+	int x = 38, y = 20;
+	int xb = x, yb = y;
+	draw_ship(x, y);
 	do {
 		if (_kbhit()) {
 			ch = _getch();
-			if (ch == 'a') {
-				i = 1;
-			}
-			if (ch == 'd') {
-				i = 2;
-			}
-			if (ch == 's') {
-				i = 0;
-			}
+			if (ch == 'a')
+				dir = 'l';
+			if (ch == 'd')
+				dir = 'r';
+			if (ch == 's')
+				dir = 'p';
 			if (ch == ' ') {
-				j = 1;
+				for (int i = 0; i < 5; i++) {
+					if (gun[i] == 0) {
+						gun[i] = 1;
+						ax[i] = x + 2;
+						ay[i] = y - 1;
+						break;
+					}
+				}
 			}
 			fflush(stdin);
 		}
-		if (i == 1 && x1>1) {
-			erase_ship(x1, y1);
-			setcolor(2, 4);
-			draw_ship(--x1, y1);
-			setcolor(2, 0);
-			Sleep(100);
+		if (dir == 'l' && x > 0) { erase_ship(x, y); draw_ship(--x, y); }
+		if (dir == 'r' && x < 75) { erase_ship(x, y); draw_ship(++x, y); }
+		if (dir == 'p') { erase_ship(x, y);  draw_ship(x, y); }
+		for (int i = 0; i < 5; i++) {
+			if (gun[i] == 1 && ay[i] > 0) {
+				erase_bullet(ax[i], ay[i]);  draw_bullet(ax[i], --ay[i]);
+			}
+			if (gun[i] == 1 && ay[i] == 0) {
+				erase_bullet(ax[i], ay[i]);
+				gun[i] = 0;
+			}
 		}
-		if (i == 2 && x1<113) {
-			erase_ship(x1, y1);
-			setcolor(2, 4);
-			draw_ship(++x1, y1);
-			setcolor(2, 0);
-			Sleep(100);
-		}
-		if (j == 0) {
-			x2 = x1;
-		}
-		if (j == 1 && y2 > 1) {
-			erase_ammo(x2, y2);
-			draw_ammo(x2, --y2);  
-		}
-		if (y2 == 1) {
-			erase_ammo(x2, y2);
-			j = 0;
-			y2 = y1;
-		}
+		Sleep(100);
 	} while (ch != 'x');
 	return 0;
 }
